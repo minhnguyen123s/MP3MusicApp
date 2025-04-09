@@ -1,11 +1,11 @@
 package com.example.android.mp3musicapp.Activity;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.app.ProgressDialog;
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -13,23 +13,17 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.android.mp3musicapp.R;
-import com.example.android.mp3musicapp.RegisterAndLogin.NetworkService;
-import com.example.android.mp3musicapp.RegisterAndLogin.NetworkClient;
-import com.example.android.mp3musicapp.RegisterAndLogin.Register.RegistrationResponseModel;
 
-import java.util.HashMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
-
 public class RegisterActivity extends AppCompatActivity {
     EditText inputName, inputPassword, inputemail;
-    Button buttonRegister;
+    Button buttonRegister, btnChuyen;
     TextView linklogin;
+    private UserDataManager userDataManager;
 
+    @SuppressLint("MissingInflatedId")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +33,11 @@ public class RegisterActivity extends AppCompatActivity {
         inputemail = findViewById(R.id.txtEmail);
         inputPassword = findViewById(R.id.txtPwd);
         linklogin = findViewById(R.id.lnkLogin);
+        buttonRegister = findViewById(R.id.btnregister);
+
+        userDataManager = new UserDataManager(this);
+        userDataManager.open();
+
         linklogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -47,65 +46,63 @@ public class RegisterActivity extends AppCompatActivity {
                 finish();
             }
         });
-        buttonRegister = findViewById(R.id.btnregister);
-        buttonRegister.setOnClickListener(new View.OnClickListener() {
 
+        buttonRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                if (inputName.getText().toString().equals("")) {
+                String name = inputName.getText().toString().trim();
+                String email = inputemail.getText().toString().trim();
+                String password = inputPassword.getText().toString();
+
+                Log.d("RegisterActivity", "Bắt đầu đăng ký với: Tên=" + name + ", Email=" + email);
+
+                if (name.isEmpty()) {
                     Toast.makeText(RegisterActivity.this, "Tên không được trống!", Toast.LENGTH_SHORT).show();
-                } else if (inputemail.getText().toString().equals("")) {
-                    Toast.makeText(RegisterActivity.this, "Email không được trống!", Toast.LENGTH_SHORT).show();
-                } else if (inputPassword.getText().toString().equals("")) {
-                    Toast.makeText(RegisterActivity.this, "Mật khẩu không được trống!", Toast.LENGTH_SHORT).show();
-                } else if (emailValidator(inputemail.getText().toString()) == false) {
-                    Toast.makeText(RegisterActivity.this, "Email không hợp lệ!", Toast.LENGTH_SHORT).show();
-                } else if (inputPassword.getText().toString().length() < 6) {
-                    Toast.makeText(RegisterActivity.this, "Mật khẩu phải ít nhất 6 kí tự!", Toast.LENGTH_SHORT).show();
-                }else {
-                    HashMap<String, String> params = new HashMap<>();
-                    params.put("name", inputName.getText().toString());
-                    params.put("email", inputemail.getText().toString());
-                    params.put("password", inputPassword.getText().toString());
-                    register(params);
+                    return;
                 }
-            }
-        });
+                if (email.isEmpty()) {
+                    Toast.makeText(RegisterActivity.this, "Email không được trống!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (password.isEmpty()) {
+                    Toast.makeText(RegisterActivity.this, "Mật khẩu không được trống!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (!emailValidator(email)) {
+                    Toast.makeText(RegisterActivity.this, "Email không hợp lệ!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
+                if (password.length() < 6) {
+                    Toast.makeText(RegisterActivity.this, "Mật khẩu phải ít nhất 6 kí tự!", Toast.LENGTH_SHORT).show();
+                    return;
+                }
 
-    }
-
-    private void register(HashMap<String, String> params) {
-
-        final ProgressDialog progressDialog = new ProgressDialog(RegisterActivity.this);
-        progressDialog.setTitle("Vui lòng đợi");
-        progressDialog.setMessage("Đang đăng kí...");
-        progressDialog.setCancelable(false);
-        progressDialog.show();
-
-        NetworkService networkService = NetworkClient.getClient().create(NetworkService.class);
-        Call<RegistrationResponseModel> registerCall = networkService.register(params);
-        registerCall.enqueue(new Callback<RegistrationResponseModel>() {
-            @Override
-            public void onResponse(@NonNull Call<RegistrationResponseModel> call, @NonNull Response<RegistrationResponseModel> response) {
-                RegistrationResponseModel responseBody = response.body();
-                if (responseBody != null) {
-                    if (responseBody.getSuccess().equals("1")) {
-                        Toast.makeText(RegisterActivity.this, responseBody.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.d("RegisterActivity", "Dữ liệu hợp lệ, kiểm tra email tồn tại.");
+                if (userDataManager.checkUserExists(email)) {
+                    Toast.makeText(RegisterActivity.this, "Email đã tồn tại!", Toast.LENGTH_SHORT).show();
+                    Log.d("RegisterActivity", "Email " + email + " đã tồn tại.");
+                } else {
+                    Log.d("RegisterActivity", "Email " + email + " chưa tồn tại, tiến hành đăng ký.");
+                    long result = userDataManager.registerUser(name, email, password);
+                    Log.d("RegisterActivity", "Kết quả đăng ký: " + result);
+                    if (result != -1) {
+                        Toast.makeText(RegisterActivity.this, "Đăng ký thành công!", Toast.LENGTH_SHORT).show();
                         Intent intent = new Intent(RegisterActivity.this, LoginActivity.class);
                         startActivity(intent);
                         finish();
                     } else {
-                        Toast.makeText(RegisterActivity.this, responseBody.getMessage(), Toast.LENGTH_SHORT).show();
+                        Toast.makeText(RegisterActivity.this, "Đăng ký thất bại!", Toast.LENGTH_SHORT).show();
+                        Log.e("RegisterActivity", "Lỗi khi chèn dữ liệu người dùng vào cơ sở dữ liệu.");
                     }
                 }
-                progressDialog.dismiss();
-            }
-
-            @Override
-            public void onFailure(@NonNull Call<RegistrationResponseModel> call, @NonNull Throwable t) {
-                progressDialog.dismiss();
             }
         });
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        userDataManager.close();
     }
 
     public boolean emailValidator(String email) {
