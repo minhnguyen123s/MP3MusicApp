@@ -1,6 +1,8 @@
-package com.example.android.mp3musicapp.Activity; // Hoặc package Model
+package com.example.android.mp3musicapp.Activity;
 
-public class Song {
+import java.io.Serializable;
+
+public class Song implements Serializable {
     private int id;
     private String title;
     private String artist;

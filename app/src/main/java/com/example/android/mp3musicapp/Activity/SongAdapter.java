@@ -30,6 +30,11 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         mListener = listener;
     }
 
+    public void setSongs(List<Song> newSongList) {
+        this.songList = newSongList;
+        notifyDataSetChanged();
+    }
+
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

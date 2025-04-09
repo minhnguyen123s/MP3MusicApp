@@ -1,12 +1,12 @@
 <resources>
-    <string name="app_name">Mp3 music</string>
-    <string name="title_activity_login">LoginActivity</string>
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome !"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
+    <string name="app_name">MP3MusicApp</string>
+    <string name="previous_song">Previous Song</string>
+    <string name="play_pause">Play/Pause</string>
+    <string name="next_song">Next Song</string>
+    <string name="shuffle">Chế độ phát ngẫu nhiên</string>
+    <string name="repeat">Chế độ lặp lại</string>
+    <string name="repeat_one">Lặp lại một bài</string>
+    <string name="repeat_off">Tắt lặp lại</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
