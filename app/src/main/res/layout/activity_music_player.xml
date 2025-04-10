@@ -1,136 +1,186 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:weightSum="10"
+    android:background="#2C6896"
     tools:context=".Activity.PlayMusicActivity">
-
-    <TextView
-        android:id="@+id/textViewSongTitle"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        android:gravity="center"
-        android:text="Tên bài hát"
-        android:textSize="20sp"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
-        android:id="@+id/textViewArtistName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="32dp"
-        android:gravity="center"
-        android:text="Tên nghệ sĩ"
-        android:textSize="16sp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewSongTitle" />
-
-    <SeekBar
-        android:id="@+id/seekBarProgress"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:layout_marginTop="32dp"
-        android:layout_marginEnd="32dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewArtistName" />
-
-    <TextView
-        android:id="@+id/textViewCurrentTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="32dp"
-        android:text="0:00"
-        app:layout_constraintStart_toStartOf="@+id/seekBarProgress"
-        app:layout_constraintTop_toBottomOf="@+id/seekBarProgress" />
-
-    <TextView
-        android:id="@+id/textViewTotalTime"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="32dp"
-        android:text="3:30"
-        app:layout_constraintEnd_toEndOf="@+id/seekBarProgress"
-        app:layout_constraintTop_toBottomOf="@+id/seekBarProgress" />
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarPlayMusic"
+        app:title="Playing Music"
+        app:titleTextColor="#ffffff"
+        android:layout_width="match_parent"
+        android:background="#2C6896"
+        android:layout_height="?attr/actionBarSize"/>
 
     <LinearLayout
-        android:id="@+id/linearLayout"
-        android:layout_width="199dp"
-        android:layout_height="46dp"
-        android:layout_marginTop="56dp"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.655"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewCurrentTime">
+        android:layout_width="match_parent"
+        android:layout_height="128dp"
+        android:layout_weight="4"
+        android:gravity="center"
+        android:orientation="vertical">
 
-        <ImageButton
-            android:id="@+id/buttonPrevious"
+        <TextView
+            android:id="@+id/textViewSongTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginEnd="32dp"
-            android:background="#FFEB3B"
-            android:contentDescription="@string/previous_song"
-            android:src="@drawable/ic_skip_previous" />
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:paddingHorizontal="32dp"
+            android:singleLine="true"
+            android:text="Tên bài hát"
+            android:textColor="#ffffff"
+            android:textSize="20sp"
+            android:textStyle="bold" />
 
-        <ImageButton
-            android:id="@+id/buttonPlayPause"
+        <TextView
+            android:id="@+id/textViewArtistName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="?android:attr/selectableItemBackgroundBorderless"
-            android:contentDescription="@string/play_pause"
-            android:src="@android:drawable/ic_media_play" />
+            android:layout_marginTop="8dp"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:paddingHorizontal="32dp"
+            android:singleLine="true"
+            android:text="Tên nghệ sĩ"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
 
-        <ImageButton
-            android:id="@+id/buttonNext"
+        <TextView
+            android:id="@+id/textViewAlbum"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginStart="32dp"
-            android:background="#FFEB3B"
-            android:contentDescription="@string/next_song"
-            android:src="@drawable/ic_skip_next" />
+            android:layout_marginTop="4dp"
+            android:ellipsize="marquee"
+            android:gravity="center"
+            android:paddingHorizontal="32dp"
+            android:singleLine="true"
+            android:text="Album"
+            android:textColor="#ffffff"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/textViewYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:gravity="center"
+            android:text="Năm"
+            android:textColor="#ffffff"
+            android:textSize="14sp" />
 
     </LinearLayout>
 
-    <ImageButton
-        android:id="@+id/buttonRepeat"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="13dp"
-        android:layout_marginBottom="19dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/repeat"
-        android:src="@drawable/ic_loop"
-        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.764"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTotalTime"
-        app:layout_constraintVertical_bias="0.0" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="360dp"
+        android:layout_weight="4"
+        android:gravity="bottom"
+        android:orientation="vertical">
 
-    <ImageButton
-        android:id="@+id/buttonShuffle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="11dp"
-        android:layout_marginTop="13dp"
-        android:background="?android:attr/selectableItemBackgroundBorderless"
-        android:contentDescription="@string/shuffle"
-        android:src="@drawable/ic_shuffle"
-        app:layout_constraintStart_toEndOf="@+id/buttonRepeat"
-        app:layout_constraintTop_toBottomOf="@+id/textViewTotalTime" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:weightSum="10">
 
+            <TextView
+                android:id="@+id/textViewCurrentTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="00:00"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            <SeekBar
+                android:id="@+id/seekBarProgress"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="9" />
+
+            <TextView
+                android:id="@+id/textViewTotalTime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.5"
+                android:gravity="center"
+                android:text="00:00"
+                android:textColor="#ffffff"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <ImageButton
+                android:id="@+id/buttonShuffle"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginRight="15dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_shuffle"
+                tools:ignore="SpeakableTextPresentCheck,SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+
+            <ImageButton
+                android:id="@+id/buttonPrevious"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="15dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_skip_previous"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/buttonPlayPause"
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:layout_marginRight="15dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_play"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/buttonNext"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_marginRight="15dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_skip_next"
+                tools:ignore="SpeakableTextPresentCheck" />
+
+            <ImageButton
+                android:id="@+id/buttonRepeat"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:background="@null"
+                android:scaleType="fitXY"
+                android:src="@drawable/ic_loop"
+                tools:ignore="SpeakableTextPresentCheck,TouchTargetSizeCheck" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/viewPagerPlayMusic"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        tools:ignore="SpeakableTextPresentCheck" />
+
+</LinearLayout>

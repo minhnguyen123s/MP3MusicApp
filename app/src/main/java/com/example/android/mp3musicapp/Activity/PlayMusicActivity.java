@@ -27,6 +27,8 @@ public class PlayMusicActivity extends AppCompatActivity {
 
     private TextView textViewSongTitle;
     private TextView textViewArtistName;
+    private TextView textViewAlbum; // Thêm TextView cho Album
+    private TextView textViewYear;  // Thêm TextView cho Year
     private ImageButton buttonPlayPause;
     private ImageButton buttonPrevious;
     private ImageButton buttonNext;
@@ -54,6 +56,8 @@ public class PlayMusicActivity extends AppCompatActivity {
         // Ánh xạ các View
         textViewSongTitle = findViewById(R.id.textViewSongTitle);
         textViewArtistName = findViewById(R.id.textViewArtistName);
+        textViewAlbum = findViewById(R.id.textViewAlbum); // Ánh xạ TextView Album
+        textViewYear = findViewById(R.id.textViewYear);   // Ánh xạ TextView Year
         buttonPlayPause = findViewById(R.id.buttonPlayPause);
         buttonPrevious = findViewById(R.id.buttonPrevious);
         buttonNext = findViewById(R.id.buttonNext);
@@ -93,6 +97,8 @@ public class PlayMusicActivity extends AppCompatActivity {
             if (currentSong != null) {
                 textViewSongTitle.setText(currentSong.getTitle());
                 textViewArtistName.setText(currentSong.getArtist());
+                textViewAlbum.setText(currentSong.getAlbum()); // Hiển thị Album
+                textViewYear.setText(currentSong.getYear());   // Hiển thị Year
                 playMusic(currentSong.getFilePath());
             } else {
                 finish();
@@ -146,7 +152,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     currentSongIndex = songList.size() - 1; // Quay lại cuối danh sách
                 }
                 currentSong = songList.get(currentSongIndex);
-                updatePlayingSong();
+                updatePlayingSongInfo();
                 playMusic(currentSong.getFilePath());
             }
         }
@@ -167,7 +173,7 @@ public class PlayMusicActivity extends AppCompatActivity {
                     currentSongIndex = 0; // Quay lại đầu danh sách
                 }
                 currentSong = songList.get(currentSongIndex);
-                updatePlayingSong();
+                updatePlayingSongInfo();
                 playMusic(currentSong.getFilePath());
             }
         }
@@ -205,7 +211,7 @@ public class PlayMusicActivity extends AppCompatActivity {
             }
             currentSongIndex = randomIndex;
             currentSong = songList.get(currentSongIndex);
-            updatePlayingSong();
+            updatePlayingSongInfo();
             playMusic(currentSong.getFilePath());
         }
     }
@@ -223,9 +229,11 @@ public class PlayMusicActivity extends AppCompatActivity {
         }
     }
 
-    private void updatePlayingSong() {
+    private void updatePlayingSongInfo() {
         textViewSongTitle.setText(currentSong.getTitle());
         textViewArtistName.setText(currentSong.getArtist());
+        textViewAlbum.setText(currentSong.getAlbum());
+        textViewYear.setText(currentSong.getYear());
     }
 
     private void updateSeekBar() {

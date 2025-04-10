@@ -7,9 +7,11 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -23,7 +25,7 @@ import com.example.android.mp3musicapp.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Fragment_Trang_Chu extends Fragment implements SongAdapter.OnItemClickListener {
+public class Fragment_Trang_Chu extends Fragment implements SongAdapter.OnItemClickListener, SongAdapter.OnItemLongClickListener {
 
     View view;
     RecyclerView recyclerViewSongs;
@@ -47,16 +49,26 @@ public class Fragment_Trang_Chu extends Fragment implements SongAdapter.OnItemCl
         recyclerViewSongs.setLayoutManager(new LinearLayoutManager(getActivity()));
 
         songDataManager = new SongDataManager(getActivity());
-        songDataManager.open();
-        songList = songDataManager.getAllSongs();
-        originalSongList.addAll(songList); // Sao chép danh sách ban đầu
-        songDataManager.close();
-
-        songAdapter = new SongAdapter(getActivity(), songList);
-        songAdapter.setOnItemClickListener(this);
-        recyclerViewSongs.setAdapter(songAdapter);
+        loadAllSongs(); // Tải danh sách bài hát khi Fragment được tạo
 
         return view;
+    }
+
+    public void loadAllSongs() {
+        songDataManager.open();
+        songList = songDataManager.getAllSongs();
+        originalSongList.clear(); // Xóa danh sách gốc cũ
+        originalSongList.addAll(songList); // Sao chép danh sách mới
+        songDataManager.close();
+
+        if (songAdapter == null) {
+            songAdapter = new SongAdapter(getActivity(), songList);
+            songAdapter.setOnItemClickListener(this);
+            songAdapter.setOnItemLongClickListener(this); // Thiết lập OnItemLongClickListener
+            recyclerViewSongs.setAdapter(songAdapter);
+        } else {
+            songAdapter.setSongs(songList); // Cập nhật danh sách trong Adapter
+        }
     }
 
     public void filter(String query) {
@@ -83,6 +95,37 @@ public class Fragment_Trang_Chu extends Fragment implements SongAdapter.OnItemCl
         intent.putExtra("songList", (java.util.ArrayList) originalSongList); // Truyền danh sách gốc
         intent.putExtra("currentSongIndex", position);
         startActivity(intent);
+    }
+
+    @Override
+    public void onItemLongClick(int position) {
+        Song songToDelete = songList.get(position);
+        showDeleteConfirmationDialog(songToDelete, position);
+    }
+
+    private void showDeleteConfirmationDialog(Song song, int position) {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Xóa bài hát")
+                .setMessage("Bạn có chắc chắn muốn xóa bài hát '" + song.getTitle() + "'?")
+                .setPositiveButton("Xóa", (dialog, which) -> {
+                    deleteSong(song, position);
+                })
+                .setNegativeButton("Hủy", null)
+                .show();
+    }
+
+    private void deleteSong(Song song, int position) {
+        songDataManager.open();
+        long result = songDataManager.deleteSong(song.getId());
+        songDataManager.close();
+
+        if (result > 0) {
+            songList.remove(position);
+            songAdapter.notifyItemRemoved(position);
+            Toast.makeText(getContext(), "Đã xóa bài hát.", Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getContext(), "Xóa bài hát thất bại.", Toast.LENGTH_SHORT).show();
+        }
     }
 
     @Override

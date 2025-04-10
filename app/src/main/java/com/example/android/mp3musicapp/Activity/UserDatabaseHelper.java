@@ -3,11 +3,12 @@ package com.example.android.mp3musicapp.Activity;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 public class UserDatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "music_app_users";
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3; // Tăng version để kích hoạt onUpgrade
 
     // Bảng người dùng
     public static final String TABLE_USERS = "users";
@@ -33,6 +34,7 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
     public static final String COLUMN_SONG_ARTIST = "artist";
     public static final String COLUMN_SONG_ALBUM = "album";
     public static final String COLUMN_SONG_FILE_PATH = "file_path";
+    public static final String COLUMN_SONG_YEAR = "year";
 
     private static final String SQL_CREATE_SONGS_TABLE =
             "CREATE TABLE " + TABLE_SONGS + " (" +
@@ -40,7 +42,8 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
                     COLUMN_SONG_TITLE + " TEXT NOT NULL," +
                     COLUMN_SONG_ARTIST + " TEXT," +
                     COLUMN_SONG_ALBUM + " TEXT," +
-                    COLUMN_SONG_FILE_PATH + " TEXT NOT NULL)";
+                    COLUMN_SONG_FILE_PATH + " TEXT NOT NULL," +
+                    COLUMN_SONG_YEAR + " TEXT DEFAULT '')"; // Thêm cột YEAR và đặt giá trị mặc định
 
     private static final String SQL_DELETE_SONGS_ENTRIES =
             "DROP TABLE IF EXISTS " + TABLE_SONGS;
@@ -57,8 +60,13 @@ public class UserDatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL(SQL_DELETE_USERS_ENTRIES);
-        db.execSQL(SQL_DELETE_SONGS_ENTRIES);
-        onCreate(db);
+        Log.w(UserDatabaseHelper.class.getName(),
+                "Upgrading database from version " + oldVersion + " to "
+                        + newVersion + ", which will destroy all old data");
+        if (oldVersion < 3) {
+            // Thêm cột year nếu phiên bản cũ chưa có (nếu bạn đã ở version 2)
+            db.execSQL("ALTER TABLE " + TABLE_SONGS + " ADD COLUMN " + COLUMN_SONG_YEAR + " TEXT DEFAULT '';");
+        }
+        // Bạn có thể thêm các thay đổi schema khác ở đây nếu cần
     }
 }

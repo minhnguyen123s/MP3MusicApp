@@ -3,6 +3,8 @@
     package="com.example.android.mp3musicapp">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
 
     <application
         android:allowBackup="true"
@@ -12,11 +14,6 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".Activity.PlayMusicActivity" />
-        <activity android:name=".Activity.AllAlbumListActivity" />
-        <activity android:name=".Activity.CategoryByTopicActivity" />
-        <activity android:name=".Activity.AllTopicActivity" />
-        <activity android:name=".Activity.AllPlayListActivity" />
-        <activity android:name=".Activity.MusicListActivity" />
         <activity android:name=".Activity.RegisterActivity" />
         <activity android:name=".Activity.MainActivity" />
         <activity

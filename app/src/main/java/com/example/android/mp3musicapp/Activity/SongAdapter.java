@@ -19,15 +19,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
 
     private Context context;
     private List<Song> songList;
-    private OnItemClickListener mListener; // Thêm biến listener
+    private OnItemClickListener mListener; // Listener cho click thông thường
+    private OnItemLongClickListener mLongListener; // Listener cho long click
 
     public SongAdapter(Context context, List<Song> songList) {
         this.context = context;
         this.songList = songList;
     }
 
-    public void setOnItemClickListener(OnItemClickListener listener) { // Thêm phương thức set listener
+    public void setOnItemClickListener(OnItemClickListener listener) { // Phương thức set listener cho click
         mListener = listener;
+    }
+
+    public void setOnItemLongClickListener(OnItemLongClickListener longListener) { // Phương thức set listener cho long click
+        mLongListener = longListener;
     }
 
     public void setSongs(List<Song> newSongList) {
@@ -60,6 +65,10 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
         void onItemClick(int position);
     }
 
+    public interface OnItemLongClickListener {
+        void onItemLongClick(int position);
+    }
+
     public class ViewHolder extends RecyclerView.ViewHolder {
         public TextView tvSongTitle;
         public TextView tvSongArtist;
@@ -80,6 +89,20 @@ public class SongAdapter extends RecyclerView.Adapter<SongAdapter.ViewHolder> {
                             mListener.onItemClick(position);
                         }
                     }
+                }
+            });
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() { // Thêm OnLongClickListener cho itemView
+                @Override
+                public boolean onLongClick(View v) {
+                    if (mLongListener != null) {
+                        int position = getAdapterPosition();
+                        if (position != RecyclerView.NO_POSITION) {
+                            mLongListener.onItemLongClick(position);
+                            return true; // Trả về true để báo sự kiện đã được xử lý
+                        }
+                    }
+                    return false;
                 }
             });
         }
